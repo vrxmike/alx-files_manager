@@ -1,6 +1,6 @@
 import Queue from 'bull';
 import imageThumbnail from 'image-thumbnail';
-import { promisify as fs } from 'fs';
+import { promises as fs } from 'fs';
 import { ObjectID } from 'mongodb';
 import dbClient from './utils/db';
 
@@ -51,11 +51,11 @@ fileQueue.process(async (job, done) => {
 });
 
 userQueue.process(async (job, done) => {
-  const { userId } job.data;
+  const { userId } = job.data;
   if (!userId) done(new Error('Missing userId'));
   const users = dbClient.db.collection('users');
   const idObject = new ObjectId(userId);
-  const user = await users.findOne(_id: idObject);
+  const user = await users.findOne({ _id: idObject });
   if (user) {
     console.log(`Welcome ${user.email}!`);
   } else {

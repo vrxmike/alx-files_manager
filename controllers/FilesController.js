@@ -36,7 +36,7 @@ class FilesController {
     const isPublic = request.body.isPublic || false;
     const { data } = request.body;
     if (!name) {
-      return response.status(400).json({ error: 'Missing name' })
+      return response.status(400).json({ error: 'Missing name' });
     }
     if (!type) {
       return response.status(400).json({ error: 'Missing type' });
@@ -125,8 +125,8 @@ class FilesController {
 
   static async getShow(request, response) {
     const user = await FilesController.getUser(request);
-      if (!user) {
-        return response.status(401).json({ error: 'Unauthorized' });
+    if (!user) {
+      return response.status(401).json({ error: 'Unauthorized' });
     }
     const fileId = request.params.id;
     const files = dbClient.db.collection('files');
@@ -140,27 +140,27 @@ class FilesController {
 
   static async getIndex(request, response) {
     const user = await FilesController.getUser(request);
-      if (!user) {
-        return response.status(401).json({ error: 'Unauthorized' });
-      }
-      const {
-        parentId,
-        page,
-      } = request.query;
-      const pageNum = page || 0;
-      const files = dbClient.db.collection('files');
-      let query;
-      if (!parentId) {
-        query = { userId: user._id };
-      } else {
-        query = { userId: user._id, parentId: ObjectID(parentId) };
-      }
-      files.aggregate(
-        [
-          { $match: query },
-          { $sort: { _id: -1 } },
-          {
-            $facet: {
+    if (!user) {
+      return response.status(401).json({ error: 'Unauthorized' });
+    }
+    const {
+      parentId,
+      page,
+    } = request.query;
+    const pageNum = page || 0;
+    const files = dbClient.db.collection('files');
+    let query;
+    if (!parentId) {
+      query = { userId: user._id };
+    } else {
+      query = { userId: user._id, parentId: ObjectID(parentId) };
+    }
+    files.aggregate(
+      [
+        { $match: query },
+        { $sort: { _id: -1 } },
+        {
+          $facet: {
             metadata: [{ $count: 'total' }, { $addFields: { page: parseInt(pageNum, 10) } }],
             data: [{ $skip: 20 * parseInt(pageNum, 10) }, { $limit: 20 }],
           },

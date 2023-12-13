@@ -9,10 +9,10 @@ module.exports = {
       'plugin:jest/all',
     ],
     globals: {
-      Atomics: 'reasonly',
+      Atomics: 'readonly',
       SharedArrayBuffer: 'readonly',
     },
-    parseOptions: {
+    parserOptions: {
       ecmaVersion: 2018,
       sourceType: 'module',
     },

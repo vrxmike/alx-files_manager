@@ -148,7 +148,7 @@ class FilesController {
         page,
       } = request.query;
       const pageNum = page || 0;
-      const files = dbClient.db.colelction('files');
+      const files = dbClient.db.collection('files');
       let query;
       if (!parentId) {
         query = { userId: user._id };
@@ -245,7 +245,7 @@ class FilesController {
           }
           const data = await fs.readFile(fileName);
           const contentType = mime.contentType(file.name);
-          return respone.header('Content-Type', contentType).status(200).send(data);
+          return response.header('Content-Type', contentType).status(200).send(data);
         } catch (error) {
           console.log(error);
           return response.status(404).json({ error: 'Not found' });
@@ -261,7 +261,7 @@ class FilesController {
           }
           try {
             let fileName = file.localPath;
-            const size = request.param('size');
+            const size = request.params('size');
             if (size) {
               fileName = `${file.localPath}_${size}`;
             }

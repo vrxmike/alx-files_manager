@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { promisify as fs } from 'fs';
+import { promises as fs } from 'fs';
 import { ObectID } from 'mongodb';
 import mime from 'mime-types';
 import Queue from 'bull';
@@ -15,7 +15,7 @@ class FilesController {
     const userId = await redisClient.get(key);
     if (userId) {
       const users = dbClient.db.collection('users');
-      const idobject = new ObjectID(userId);
+      const idObject = new ObjectID(userId);
       const user = await users.findOne({ _id: idObject });
       if (!user) {
         return null;
@@ -45,7 +45,7 @@ class FilesController {
       return response.status(400).json({ error: 'Missing data' });
     }
 
-    const files = dbClient.dn.collection('files');
+    const files = dbClient.db.collection('files');
     if (parentId) {
       const idObject = new ObjectID(parentId);
       const file = await files.findOne({ _id: idObject, userId: user._id });
@@ -181,7 +181,7 @@ class FilesController {
         return response.status(200).json(final);
       }
       console.log('Error occured');
-      return response.status(404).json({ error: 'not found' });
+      return response.status(404).json({ error: 'Not found' });
     });
     return null;
   }
